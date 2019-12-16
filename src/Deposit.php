@@ -1,32 +1,28 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Bank\CommissionTask;
 
-
 class Deposit extends Operation
 {
-    public function __construct(\DateTime $operationDate, $operationAmount, $userId, $operationType, $userType, $operationCurrency)
+    protected $conversion;
+
+    public function __construct(Conversion $conversion)
     {
-        $this->setOperationDate($operationDate);
-        $this->setOperationAmount($operationAmount);
-        $this->setUserId($userId);
-        $this->setOperationType($operationType);
-        $this->setUserType($userType);
-        $this->setOperationCurrency($operationCurrency);
+        $this->conversion = $conversion;
     }
 
-    public function depositCommission($operation): float
+    public function depositCommission($data): float
     {
-        $commision = 0.03;
-        $cashinCommission = ($commision / 100) * $this->getOperationAmount();
-
-        if($cashinCommission >= 5) {
-            $cashinCommission = 5;
+        $cashinCommission = (self::DEPOSIT_COMMISSION / 100) * $this->conversion->convertToEur($data[4], $data[5]);
+        $cashinCommission = $this->conversion->convertFromEur($cashinCommission, $data[5]);
+        if ($cashinCommission >= self::DEPOSIT_COMMISSION_MAX) {
+            $cashinCommission = self::DEPOSIT_COMMISSION_MAX;
         }
+
+        $cashinCommission = $this->conversion->roundCommission($cashinCommission, $data[5]);
 
         return $cashinCommission;
     }
-
-
 }

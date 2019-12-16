@@ -1,63 +1,24 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Bank\CommissionTask;
 
 class Conversion implements ConversionInterface
 {
-    private $operationCurrency;
-    private $operationAmount;
+    const USD = 1.1497;
+    const JPY = 129.53;
 
-    public function __construct(string $operationCurrency, $operationAmount)
+    public function convertToEur($amount, $currency): float
     {
-        $this->setOperationCurrency($operationCurrency);
-        $this->setOperationAmount($operationAmount);
-    }
+        $conversionCurrent = floatval($amount); // using floatval to avoid type juggling
 
-    /**
-     * @return mixed
-     */
-    public function getOperationCurrency()
-    {
-        return $this->operationCurrency;
-    }
-
-    /**
-     * @param mixed $operationCurrency
-     */
-    public function setOperationCurrency($operationCurrency): void
-    {
-        $this->operationCurrency = $operationCurrency;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOperationAmount()
-    {
-        return $this->operationAmount;
-    }
-
-    /**
-     * @param mixed $operationAmount
-     */
-    public function setOperationAmount($operationAmount): void
-    {
-        $this->operationAmount = $operationAmount;
-    }
-
-    public function convertToEur($conversion): float
-    {
-        $conversionCurrent = floatval($this->getOperationAmount()); // using floatval to avoid type juggling
-        $usd = floatval(1.1497);
-        $jpy = floatval(129.53);
-        $eur = floatval(1.00);
-        switch($this->getOperationCurrency()) {
-            case "USD":
-                $converted = (float) $conversionCurrent * $usd;
+        switch ($currency) {
+            case 'USD':
+                $converted = (float) $conversionCurrent / self::USD;
                 break;
-            case "JPY":
-                $converted = (float) $conversionCurrent * $jpy;
+            case 'JPY':
+                $converted = (float) $conversionCurrent / self::JPY;
                 break;
             default:
                 $converted = $conversionCurrent;
@@ -66,4 +27,35 @@ class Conversion implements ConversionInterface
         return $converted;
     }
 
+    public function convertFromEur($amount, $currency): float
+    {
+        $conversionCurrent = floatval($amount); // using floatval to avoid type juggling
+
+        switch ($currency) {
+            case 'USD':
+                $converted = (float) $conversionCurrent * self::USD;
+                break;
+            case 'JPY':
+                $converted = (float) $conversionCurrent * self::JPY;
+                break;
+            default:
+                $converted = $conversionCurrent;
+        }
+
+        return $converted;
+    }
+
+    public function roundCommission($commission, $currency)
+    {
+        if ($currency === 'JPY') {
+            $rounded = ceil($commission);
+        } else {
+            $rounded = $commission * 100;
+            $rounded = round($rounded, 2);
+            $rounded = ceil($rounded);
+            $rounded = $rounded / 100;
+        }
+
+        return $rounded;
+    }
 }

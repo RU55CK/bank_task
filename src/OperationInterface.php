@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bank\CommissionTask;
 
-interface OperationInterface {
-
+interface OperationInterface
+{
     public function depositCommission($operation): float;
-    public function withdraw($operation): void;
+
+    public function withdrawCommission($operation): float;
 }
