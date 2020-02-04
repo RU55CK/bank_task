@@ -7,10 +7,12 @@ use Bank\CommissionTask\Account;
 use Bank\CommissionTask\Conversion;
 use Bank\CommissionTask\Deposit;
 use Bank\CommissionTask\Withdrawal;
+use Bank\CommissionTask\Config;
 
-$csvFile = file('input.csv');
-foreach ($csvFile as $line) {
+$csvFile = file(Config::FILE_NAME);
+foreach ($csvFile as $key => $line) {
     $data[] = str_getcsv($line);
+    $data[$key][Config::OPERATION_AMOUNT] = (float) $data[$key][Config::OPERATION_AMOUNT];
 }
 
 $convert = new Conversion();
@@ -19,11 +21,16 @@ $deposit = new Deposit($convert);
 $withdraw = new Withdrawal($convert);
 
 foreach ($data as $d) {
-    if ($d[3] === 'cash_in') {
+    if ($d[Config::OPERATION_TYPE] === 'cash_in') {
         $commission = $deposit->depositCommission($d);
     } else {
         $commission = $withdraw->withdrawCommission($d);
     }
 
-    echo number_format((float) $commission, 2, '.', ''), PHP_EOL;
+    if($d[Config::OPERATION_CURRENCY] === Config::JPY_NAME) {
+        echo $commission . PHP_EOL;
+    } else {
+        echo number_format($commission, 2, '.', ''), PHP_EOL;
+    }
+
 }

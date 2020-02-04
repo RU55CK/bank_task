@@ -33,9 +33,9 @@ class WithdrawNaturalTest extends TestCase
     public function dataProviderForWithdrawNaturalTesting(): array
     {
         return [ ['2016-01-06',1,'natural','cash_out',30000,'JPY'],
-                ['2016-01-07',1,'natural','cash_out',1000.00,'EUR'],
-                ['2016-01-07',1,'natural','cash_out',100.00,'USD'],
-                ['2016-01-10',1,'natural','cash_out',100.00,'EUR']
+            ['2016-01-07',1,'natural','cash_out',1000.00,'EUR'],
+            ['2016-01-07',1,'natural','cash_out',100.00,'USD'],
+            ['2016-01-10',1,'natural','cash_out',100.00,'EUR']
         ];
     }
 }

@@ -6,48 +6,41 @@ namespace Bank\CommissionTask;
 
 class Conversion implements ConversionInterface
 {
-    const USD = 1.1497;
-    const JPY = 129.53;
-
-    public function convertToEur($amount, $currency): float
+    public function convertToEur(float $amount, string $currency): float
     {
-        $conversionCurrent = floatval($amount); // using floatval to avoid type juggling
-
         switch ($currency) {
-            case 'USD':
-                $converted = (float) $conversionCurrent / self::USD;
+            case Config::USD_NAME:
+                $converted = $amount / Config::USD;
                 break;
-            case 'JPY':
-                $converted = (float) $conversionCurrent / self::JPY;
+            case Config::JPY_NAME:
+                $converted = $amount / Config::JPY;
                 break;
             default:
-                $converted = $conversionCurrent;
+                $converted = $amount;
         }
 
         return $converted;
     }
 
-    public function convertFromEur($amount, $currency): float
+    public function convertFromEur(float $amount, string $currency): float
     {
-        $conversionCurrent = floatval($amount); // using floatval to avoid type juggling
-
         switch ($currency) {
-            case 'USD':
-                $converted = (float) $conversionCurrent * self::USD;
+            case Config::USD_NAME:
+                $converted = $amount * Config::USD;
                 break;
-            case 'JPY':
-                $converted = (float) $conversionCurrent * self::JPY;
+            case Config::JPY_NAME:
+                $converted = $amount * Config::JPY;
                 break;
             default:
-                $converted = $conversionCurrent;
+                $converted = $amount;
         }
 
         return $converted;
     }
 
-    public function roundCommission($commission, $currency)
+    public function roundCommission(float $commission, string $currency): float
     {
-        if ($currency === 'JPY') {
+        if ($currency === Config::JPY_NAME) {
             $rounded = ceil($commission);
         } else {
             $rounded = $commission * 100;

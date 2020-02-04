@@ -6,7 +6,7 @@ namespace Bank\CommissionTask;
 
 interface ConversionInterface
 {
-    public function convertToEur($amount, $currency): float;
+    public function convertToEur(float $amount, string $currency): float;
 
-    public function convertFromEur($amount, $currency): float;
+    public function convertFromEur(float $amount, string $currency): float;
 }

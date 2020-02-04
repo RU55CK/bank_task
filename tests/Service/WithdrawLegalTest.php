@@ -17,23 +17,35 @@ class WithdrawLegalTest extends TestCase
         $this->withdraw = new Withdrawal($this->convert);
     }
 
-
-    public function testWithdrawEur()
+    /**
+     * @dataProvider dataProviderForWithdrawMinTesting
+     */
+    public function testWithdrawMinLegal($expectedResult)
     {
-
-        $data = $this->dataProviderForWithdrawTesting();
-        $commission = $this->withdraw->withdrawCommission($data[0]);
-        $this->assertTrue($commission > 0.5 , 'Commission is > 0.50Eur');
-        $commission = $this->withdraw->withdrawCommission($data[2]);
-        $this->assertTrue($commission == 0.5 , 'Commission is = 0.50Eur');
-        $commission = $this->withdraw->withdrawCommission($data[1]);
-        $this->assertTrue($commission == 0.5 , 'Commission is < 0.50Eur');
+        $result = $this->withdraw->withdrawCommission($expectedResult);
+        $this->assertEquals(0.5, $result);
     }
 
-    public function dataProviderForWithdrawTesting(): array
+    /**
+     * @dataProvider dataProviderForWithdrawNormalTesting
+     */
+    public function testWithdrawNormalLegal($expectedResult)
     {
-        return [ ['2016-01-06',2,'legal','cash_out',300.00,'EUR'],
-            ['2016-01-06',2,'legal','cash_out',10.00,'EUR'],
-            ['2016-01-06',2,'legal','cash_out',166.50,'EUR'] ];
+        $result = $this->withdraw->withdrawCommission($expectedResult);
+        $this->assertEquals(0.9, $result);
+    }
+
+    public function dataProviderForWithdrawMinTesting(): array
+    {
+        return [
+            [['2016-01-06',2,'legal','cash_out',10.00,'EUR']]
+        ];
+    }
+
+    public function dataProviderForWithdrawNormalTesting(): array
+    {
+        return [
+            [['2016-01-06',2,'legal','cash_out',300.00,'EUR']]
+        ];
     }
 }

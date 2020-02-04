@@ -21,7 +21,7 @@ class Account
     /**
      * @param mixed $weekAmount
      */
-    public function setWeekAmount($weekAmount): void
+    public function setWeekAmount(float $weekAmount): void
     {
         $this->weekAmount = $weekAmount;
     }
@@ -37,7 +37,7 @@ class Account
     /**
      * @param mixed $weekOperations
      */
-    public function setWeekOperations($weekOperations): void
+    public function setWeekOperations(float $weekOperations): void
     {
         $this->weekOperations = $weekOperations;
     }
@@ -53,14 +53,14 @@ class Account
     /**
      * @param mixed $lastDate
      */
-    public function setLastDate($lastDate): void
+    public function setLastDate(string $lastDate): void
     {
         $this->lastDate = $lastDate;
     }
 
     public function resetData(): void
     {
-        $this->setLastDate(null);
+        $this->setLastDate((string) null);
         $this->setWeekAmount(0);
         $this->setWeekOperations(0);
     }
@@ -70,7 +70,7 @@ class Account
         return ['weekOperations' => $this->getWeekOperations(), 'weekAmount' => $this->getWeekAmount(), 'lastDate' => $this->getLastDate()];
     }
 
-    public function setClientStatus($amount, $lastDate): void
+    public function setClientStatus(float $amount, string $lastDate): void
     {
         $this->setWeekOperations($this->getWeekOperations() + 1);
         $this->setWeekAmount($this->getWeekAmount() + $amount);
